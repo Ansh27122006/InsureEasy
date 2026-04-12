@@ -281,6 +281,10 @@ export default function ScenarioSimulator({ policyId }) {
   const activeCat = categories.find((c) => c.id === activeCategory);
 
   const handleAsk = async (q) => {
+    if (!policyId || policyId === "demo-policy-123") {
+      toast.error("Please upload a real policy to use the simulator.");
+      return;
+    }
     const finalQ = (q || question).trim();
     if (!finalQ) return;
     setLoading(true);

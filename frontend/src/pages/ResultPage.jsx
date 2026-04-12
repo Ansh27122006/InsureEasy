@@ -357,7 +357,10 @@ export default function ResultsPage() {
   const TABS = getTabs(t);
 
   const rawData = state?.data ?? DEMO_DATA;
-  const data = rawData.en && rawData.hi ? rawData[lang] : rawData; // Fallback for demo
+  const isRealData = rawData.en && rawData.hi;
+  const data = isRealData
+    ? { ...rawData[lang], policyId: rawData.policyId }
+    : rawData;
   const {
     summary = "",
     riskScore = 0,

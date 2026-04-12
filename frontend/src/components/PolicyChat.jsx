@@ -19,6 +19,7 @@ const SUGGESTIONS = {
 };
 
 export default function PolicyChat({ policyId }) {
+  const { lang } = useLanguage();
   const [messages, setMessages] = useState([
     {
       role: "assistant",
@@ -32,11 +33,14 @@ export default function PolicyChat({ policyId }) {
   const [loading, setLoading] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(true);
   const bottomRef = useRef(null);
-  const { lang } = useLanguage();
 
   const suggestions = SUGGESTIONS[lang];
 
   const sendMessage = async (text) => {
+    if (!policyId || policyId === "demo-policy-123") {
+      toast.error("Please upload a real policy to use the chat.");
+      return;
+    }
     const userMsg = text || input.trim();
     if (!userMsg) return;
     const updated = [...messages, { role: "user", content: userMsg }];
