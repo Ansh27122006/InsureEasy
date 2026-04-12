@@ -1,8 +1,14 @@
 const Policy = require("../models/Policy");
-const callGemini = require("../utils/geminiClient");
+const { callGemini } = require("../utils/geminiClient");
 
 const chatWithPolicy = async (req, res) => {
   const { policyId, messages } = req.body;
+  if (!policyId || !messages || messages.length === 0) {
+    return res.status(400).json({
+      success: false,
+      message: "policyId and messages are required",
+    });
+  }
 
   const policy = await Policy.findById(policyId);
   if (!policy)

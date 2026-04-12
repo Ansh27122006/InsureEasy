@@ -26,8 +26,14 @@ export default function PolicyComparison() {
 
   const winner = () => {
     if (!policy1 || !policy2) return null;
-    const score1 = policy1.riskScore + policy2.notCovered?.length - policy1.covered?.length;
-    const score2 = policy2.riskScore + policy1.notCovered?.length - policy2.covered?.length;
+    const score1 =
+      policy1.riskScore +
+      (policy1.notCovered?.length ?? 0) -
+      (policy1.covered?.length ?? 0);
+    const score2 =
+      policy2.riskScore +
+      (policy2.notCovered?.length ?? 0) -
+      (policy2.covered?.length ?? 0);
     return score1 <= score2 ? "A" : "B";
   };
 
@@ -37,19 +43,50 @@ export default function PolicyComparison() {
     <div className="space-y-6">
       <h2 className="text-xl font-bold">📊 Compare Two Policies</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {[{ label: "A", text: text1, setText: setText1, data: policy1, setData: setPolicy1, loading: loading1, setLoading: setLoading1 },
-          { label: "B", text: text2, setText: setText2, data: policy2, setData: setPolicy2, loading: loading2, setLoading: setLoading2 }].map((p) => (
-          <div key={p.label} className="border rounded-xl p-4 space-y-2">
+        {[
+          {
+            label: "A",
+            text: text1,
+            setText: setText1,
+            data: policy1,
+            setData: setPolicy1,
+            loading: loading1,
+            setLoading: setLoading1,
+          },
+          {
+            label: "B",
+            text: text2,
+            setText: setText2,
+            data: policy2,
+            setData: setPolicy2,
+            loading: loading2,
+            setLoading: setLoading2,
+          },
+        ].map((p) => (
+          <div
+            key={p.label}
+            className="border rounded-xl p-4 space-y-2">
             <h3 className="font-semibold">Policy {p.label}</h3>
-            <textarea rows={4} value={p.text} onChange={(e) => p.setText(e.target.value)}
+            <textarea
+              rows={4}
+              value={p.text}
+              onChange={(e) => p.setText(e.target.value)}
               placeholder={`Paste Policy ${p.label} text here...`}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300" />
-            <button onClick={() => analyze(p.text, p.setData, p.setLoading, `Policy ${p.label}`)}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-300"
+            />
+            <button
+              onClick={() =>
+                analyze(p.text, p.setData, p.setLoading, `Policy ${p.label}`)
+              }
               disabled={p.loading || !p.text.trim()}
               className="w-full bg-blue-500 hover:bg-blue-600 disabled:opacity-50 text-white py-2 rounded-lg text-sm font-semibold transition">
               {p.loading ? "Analyzing..." : `Analyze Policy ${p.label}`}
             </button>
-            {p.data && <p className="text-green-600 text-sm font-medium">✅ Analysis ready</p>}
+            {p.data && (
+              <p className="text-green-600 text-sm font-medium">
+                ✅ Analysis ready
+              </p>
+            )}
           </div>
         ))}
       </div>
@@ -67,8 +104,16 @@ export default function PolicyComparison() {
             <tbody>
               {[
                 ["Risk Score", policy1.riskScore, policy2.riskScore],
-                ["Covered Items", policy1.covered?.length, policy2.covered?.length],
-                ["Exclusions", policy1.notCovered?.length, policy2.notCovered?.length],
+                [
+                  "Covered Items",
+                  policy1.covered?.length,
+                  policy2.covered?.length,
+                ],
+                [
+                  "Exclusions",
+                  policy1.notCovered?.length,
+                  policy2.notCovered?.length,
+                ],
               ].map(([label, v1, v2]) => (
                 <tr key={label}>
                   <td className="border px-4 py-2 font-medium">{label}</td>
@@ -79,7 +124,12 @@ export default function PolicyComparison() {
             </tbody>
           </table>
 
-          <div className={`rounded-xl p-4 text-center font-bold text-lg ${w === "A" ? "bg-green-100 text-green-700" : "bg-green-100 text-green-700"}`}>
+          <div
+            className={`rounded-xl p-4 text-center font-bold text-lg ${
+              w === "A"
+                ? "bg-green-100 text-green-700"
+                : "bg-green-100 text-green-700"
+            }`}>
             🏆 Policy {w} is Better!
           </div>
         </div>

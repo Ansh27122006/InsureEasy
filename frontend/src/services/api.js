@@ -2,7 +2,7 @@ import axios from "axios";
 
 /* ─── Axios instance ────────────────────────────────────────── */
 const client = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api",
   timeout: 60_000, // 60s — generous for AI analysis calls
   headers: {
     Accept: "application/json",
@@ -19,7 +19,10 @@ client.interceptors.request.use(
     }
 
     if (import.meta.env?.DEV) {
-      console.debug(`[API] ${config.method?.toUpperCase()} ${config.url}`, config.data ?? "");
+      console.debug(
+        `[API] ${config.method?.toUpperCase()} ${config.url}`,
+        config.data ?? ""
+      );
     }
 
     return config;
@@ -39,14 +42,14 @@ client.interceptors.response.use(
       // Server replied with a non-2xx status
       const { status, data, config } = error.response;
       console.error(
-        `[API] ${status} error on ${config?.method?.toUpperCase()} ${config?.url}:`,
+        `[API] ${status} error on ${config?.method?.toUpperCase()} ${
+          config?.url
+        }:`,
         data
       );
 
       const message =
-        data?.message ||
-        data?.error ||
-        `Request failed with status ${status}`;
+        data?.message || data?.error || `Request failed with status ${status}`;
 
       const normalised = new Error(message);
       normalised.status = status;
@@ -80,12 +83,7 @@ client.interceptors.response.use(
  *             keyTerms: Record<string, string>, riskScore: number }}
  */
 export async function analyzePolicy(formData) {
-  const response = await client.post("/policy/analyze", formData, {
-    headers: {
-      // Let the browser set the correct multipart boundary automatically
-      "Content-Type": "multipart/form-data",
-    },
-  });
+  const response = await client.post("/policy/analyze", formData);
   return response.data;
 }
 

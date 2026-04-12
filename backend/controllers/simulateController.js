@@ -1,8 +1,14 @@
 const Policy = require("../models/Policy");
-const callGemini = require("../utils/geminiClient");
+const { callGemini } = require("../utils/geminiClient");
 
 const simulateScenario = async (req, res) => {
   const { policyId, question } = req.body;
+  if (!policyId || !question) {
+    return res.status(400).json({
+      success: false,
+      message: "policyId and question are required",
+    });
+  }
 
   const policy = await Policy.findById(policyId);
   if (!policy)
@@ -31,8 +37,17 @@ Respond ONLY with this JSON:
 }`;
 
   const raw = await callGemini(systemPrompt, userPrompt);
-  const cleaned = raw.replace(/```json|```/g, "").trim();
-  const result = JSON.parse(cleaned);
+
+  let result;
+  try {
+    const cleaned = raw.replace(/```json|```/g, "").trim();
+    result = JSON.parse(cleaned);
+  } catch (e) {
+    return res.status(500).json({
+      success: false,
+      message: "AI returned invalid response. Please try again.",
+    });
+  }
 
   res.json({ success: true, ...result });
 };
