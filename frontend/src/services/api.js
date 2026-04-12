@@ -10,14 +10,8 @@ const client = axios.create({
 });
 
 /* ─── Request interceptor ───────────────────────────────────── */
-// Attach auth token if present and log outbound requests in dev
 client.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("auth_token");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-
     if (import.meta.env?.DEV) {
       console.debug(
         `[API] ${config.method?.toUpperCase()} ${config.url}`,

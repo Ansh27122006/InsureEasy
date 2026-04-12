@@ -484,6 +484,10 @@ export default function ResultsPage() {
             {activeTab === "coverage" && (
               <CoverageGrid
                 coveredItems={covered.map((c) => ({ ...c, type: "covered" }))}
+                partialItems={partialCoverage.map((c) => ({
+                  ...c,
+                  type: "partial",
+                }))}
                 excludedItems={notCovered.map((c) => ({
                   ...c,
                   type: "excluded",
@@ -541,7 +545,7 @@ export default function ResultsPage() {
           <div className="max-w-6xl mx-auto px-6 flex items-center justify-between flex-wrap gap-3">
             <div className="flex items-center gap-2 text-sm text-gray-400">
               <span>🛡️</span>
-              <span className="font-bold text-gray-600">PolicyPal</span>
+              <span className="font-bold text-gray-600">InsureEasy</span>
               <span>· AI Analysis</span>
             </div>
             <div className="flex items-center gap-1.5 text-xs text-gray-400">

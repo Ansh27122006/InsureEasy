@@ -89,10 +89,11 @@ export default function ScenarioSimulator({ policyId }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
             className="bg-white border rounded-xl p-5 shadow space-y-3">
-            const verdict = getVerdict(result);
             <span
-              className={`inline-block px-4 py-1 rounded-full font-bold text-lg ${badgeStyle[verdict]}`}>
-              {verdict}
+              className={`inline-block px-4 py-1 rounded-full font-bold text-lg ${
+                badgeStyle[getVerdict(result)]
+              }`}>
+              {getVerdict(result)}
             </span>
             <div>
               <h4 className="font-semibold text-gray-700">Answer</h4>

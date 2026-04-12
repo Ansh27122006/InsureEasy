@@ -1,3 +1,4 @@
+import React from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { AnimatePresence, motion } from "framer-motion";
@@ -7,6 +8,19 @@ import Footer from "./components/Footer";
 import LandingPage from "./pages/LandingPage";
 import UploadPage from "./pages/UploadPage";
 import ResultPage from "./pages/ResultPage";
+import HowItWorks from "./pages/HowItWorks";
+import About from "./pages/About";
+
+/* ── Scroll to top on route change ──────────────────────────── */
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
 
 /* ── Page transition wrapper ────────────────────────────────── */
 const pageVariants = {
@@ -42,6 +56,14 @@ function AnimatedRoutes() {
             path="/results"
             element={<ResultPage />}
           />
+          <Route
+            path="/how-it-works"
+            element={<HowItWorks />}
+          />
+          <Route
+            path="/about"
+            element={<About />}
+          />
         </Routes>
       </motion.div>
     </AnimatePresence>
@@ -52,6 +74,7 @@ function AnimatedRoutes() {
 export default function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       {/* Global toast notifications */}
       <Toaster
         position="top-right"

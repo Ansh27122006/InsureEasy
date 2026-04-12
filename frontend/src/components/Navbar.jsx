@@ -23,16 +23,16 @@ export default function Navbar() {
       className={[
         "sticky top-0 z-50 w-full transition-shadow duration-300",
         scrolled ? "shadow-[0_4px_32px_0_rgba(233,69,96,0.18)]" : "shadow-none",
-      ].join(" ")}
-    >
+      ].join(" ")}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-
           {/* ── Logo ── */}
-          <Link to="/" className="flex items-center gap-2 select-none group">
+          <Link
+            to="/"
+            className="flex items-center gap-2 select-none group">
             <span className="text-2xl leading-none">🛡️</span>
             <span className="text-white font-bold text-xl tracking-tight">
-              PolicyPal
+              InsureEasy
             </span>
             {/* Red accent dot */}
             <span
@@ -49,8 +49,7 @@ export default function Navbar() {
                   to={to}
                   className="relative text-sm font-medium text-gray-300 hover:text-white transition-colors duration-200
                              after:absolute after:-bottom-0.5 after:left-0 after:h-px after:w-0 after:bg-[#E94560]
-                             after:transition-all after:duration-300 hover:after:w-full"
-                >
+                             after:transition-all after:duration-300 hover:after:w-full">
                   {label}
                 </Link>
               </li>
@@ -60,18 +59,16 @@ export default function Navbar() {
           {/* ── Desktop CTA ── */}
           <div className="hidden md:block">
             <Link
-              to="/signup"
+              to="/upload"
               className="inline-flex items-center gap-1.5 px-5 py-2 rounded-lg text-sm font-semibold text-white
                          transition-all duration-200 hover:brightness-110 hover:scale-105 active:scale-95"
-              style={{ backgroundColor: "#E94560" }}
-            >
+              style={{ backgroundColor: "#E94560" }}>
               Try Free
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20"
                 fill="currentColor"
-                className="w-4 h-4"
-              >
+                className="w-4 h-4">
                 <path
                   fillRule="evenodd"
                   d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z"
@@ -86,8 +83,7 @@ export default function Navbar() {
             className="md:hidden flex flex-col justify-center items-center w-9 h-9 gap-1.5 rounded-md
                        text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-[#E94560]"
             aria-label="Toggle menu"
-            onClick={() => setMenuOpen((v) => !v)}
-          >
+            onClick={() => setMenuOpen((v) => !v)}>
             <span
               className={[
                 "block w-5 h-0.5 bg-current transition-all duration-300 origin-center",
@@ -116,8 +112,7 @@ export default function Navbar() {
           "md:hidden overflow-hidden transition-all duration-300 ease-in-out",
           menuOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0",
         ].join(" ")}
-        style={{ backgroundColor: "#16162a" }}
-      >
+        style={{ backgroundColor: "#16162a" }}>
         <ul className="flex flex-col px-4 pb-4 pt-2 gap-1">
           {NAV_LINKS.map(({ label, to }) => (
             <li key={to}>
@@ -125,8 +120,7 @@ export default function Navbar() {
                 to={to}
                 onClick={() => setMenuOpen(false)}
                 className="block px-3 py-2.5 rounded-md text-sm font-medium text-gray-300 hover:text-white
-                           hover:bg-white/5 transition-colors duration-150"
-              >
+                           hover:bg-white/5 transition-colors duration-150">
                 {label}
               </Link>
             </li>
@@ -135,19 +129,17 @@ export default function Navbar() {
           {/* Mobile CTA */}
           <li className="mt-2">
             <Link
-              to="/signup"
+              to="/upload"
               onClick={() => setMenuOpen(false)}
               className="flex items-center justify-center gap-1.5 w-full px-4 py-2.5 rounded-lg
                          text-sm font-semibold text-white transition-all duration-200 hover:brightness-110"
-              style={{ backgroundColor: "#E94560" }}
-            >
+              style={{ backgroundColor: "#E94560" }}>
               Try Free
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20"
                 fill="currentColor"
-                className="w-4 h-4"
-              >
+                className="w-4 h-4">
                 <path
                   fillRule="evenodd"
                   d="M3 10a.75.75 0 01.75-.75h10.638L10.23 5.29a.75.75 0 111.04-1.08l5.5 5.25a.75.75 0 010 1.08l-5.5 5.25a.75.75 0 11-1.04-1.08l4.158-3.96H3.75A.75.75 0 013 10z"
