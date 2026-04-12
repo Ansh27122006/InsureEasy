@@ -73,8 +73,7 @@ client.interceptors.response.use(
  *
  * @param {FormData} formData — Must contain either a "file" (PDF Blob) or
  *                              a "text" (string) field.
- * @returns {{ summary: string, covered: string[], notCovered: string[],
- *             keyTerms: Record<string, string>, riskScore: number }}
+ * @returns {{ policyId: string, en: {...}, hi: {...} }}
  */
 export async function analyzePolicy(formData) {
   const response = await client.post("/policy/analyze", formData);
@@ -87,12 +86,14 @@ export async function analyzePolicy(formData) {
  *
  * @param {string} policyId — ID returned by analyzePolicy
  * @param {string} question — Natural-language scenario question
+ * @param {string} lang — Language code
  * @returns {{ answer: string, relevantClauses: string[] }}
  */
-export async function simulateScenario(policyId, question) {
+export async function simulateScenario(policyId, question, lang) {
   const response = await client.post("/policy/simulate", {
     policyId,
     question,
+    language: lang,
   });
   return response.data;
 }
@@ -103,12 +104,14 @@ export async function simulateScenario(policyId, question) {
  *
  * @param {string} policyId — ID of the policy context to use
  * @param {{ role: "user" | "assistant", content: string }[]} messages
+ * @param {string} lang — Language code
  * @returns {{ reply: string }}
  */
-export async function chatWithPolicy(policyId, messages) {
+export async function chatWithPolicy(policyId, messages, lang) {
   const response = await client.post("/policy/chat", {
     policyId,
     messages,
+    language: lang,
   });
   return response.data;
 }

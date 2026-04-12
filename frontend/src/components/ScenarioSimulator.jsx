@@ -2,75 +2,127 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
 import { simulateScenario } from "../services/api";
+import { useLanguage } from "../context/LanguageContext";
 
 const RED = "#E94560";
 const NAVY = "#1A1A2E";
 
-/* ── Scenario categories with presets ── */
-const CATEGORIES = [
-  {
-    id: "health",
-    label: "Health",
-    icon: "🏥",
-    color: "#10B981",
-    bg: "#ECFDF5",
-    scenarios: [
+const TRANSLATIONS = {
+  en: {
+    health: "Health",
+    property: "Property",
+    travel: "Travel",
+    vehicle: "Vehicle",
+    liability: "Liability",
+    healthScenarios: [
       "What if I get hospitalized for 3 days?",
       "What if I need surgery?",
       "What if I have a pre-existing condition?",
       "What if I need mental health treatment?",
     ],
-  },
-  {
-    id: "property",
-    label: "Property",
-    icon: "🏠",
-    color: "#3B82F6",
-    bg: "#EFF6FF",
-    scenarios: [
+    propertyScenarios: [
       "What if my house floods?",
       "What if there's a fire at home?",
       "What if my valuables are stolen?",
       "What if there's earthquake damage?",
     ],
-  },
-  {
-    id: "travel",
-    label: "Travel",
-    icon: "✈️",
-    color: "#8B5CF6",
-    bg: "#F5F3FF",
-    scenarios: [
+    travelScenarios: [
       "What if my flight gets cancelled?",
       "What if I need emergency care abroad?",
       "What if my luggage is lost?",
       "What if I need to cancel my trip?",
     ],
-  },
-  {
-    id: "vehicle",
-    label: "Vehicle",
-    icon: "🚗",
-    color: "#F59E0B",
-    bg: "#FFFBEB",
-    scenarios: [
+    vehicleScenarios: [
       "What if I have a car accident?",
       "What if my car is stolen?",
       "What if I hit another vehicle?",
       "What if my car breaks down?",
     ],
-  },
-  {
-    id: "liability",
-    label: "Liability",
-    icon: "⚖️",
-    color: RED,
-    bg: "#FFF0F3",
-    scenarios: [
+    liabilityScenarios: [
       "What if someone gets injured on my property?",
       "What if I accidentally damage someone's property?",
       "What if I'm sued for negligence?",
     ],
+  },
+  hi: {
+    health: "स्वास्थ्य",
+    property: "संपत्ति",
+    travel: "यात्रा",
+    vehicle: "वाहन",
+    liability: "दायित्व",
+    healthScenarios: [
+      "क्या होगा अगर मुझे 3 दिन अस्पताल में भर्ती होना पड़े?",
+      "क्या होगा अगर मुझे सर्जरी की जरूरत पड़े?",
+      "क्या होगा अगर मेरे पास पूर्व-मौजूदा बीमारी है?",
+      "क्या होगा अगर मुझे मानसिक स्वास्थ्य उपचार की जरूरत पड़े?",
+    ],
+    propertyScenarios: [
+      "क्या होगा अगर मेरा घर बाढ़ में डूब जाए?",
+      "क्या होगा अगर घर में आग लग जाए?",
+      "क्या होगा अगर मेरी कीमती चीजें चोरी हो जाएं?",
+      "क्या होगा अगर भूकंप से नुकसान हो?",
+    ],
+    travelScenarios: [
+      "क्या होगा अगर मेरी फ्लाइट रद्द हो जाए?",
+      "क्या होगा अगर विदेश में आपातकालीन देखभाल की जरूरत पड़े?",
+      "क्या होगा अगर मेरा सामान खो जाए?",
+      "क्या होगा अगर मुझे अपनी यात्रा रद्द करनी पड़े?",
+    ],
+    vehicleScenarios: [
+      "क्या होगा अगर मुझे कार दुर्घटना हो?",
+      "क्या होगा अगर मेरी कार चोरी हो जाए?",
+      "क्या होगा अगर मैं किसी अन्य वाहन से टकरा जाऊं?",
+      "क्या होगा अगर मेरी कार खराब हो जाए?",
+    ],
+    liabilityScenarios: [
+      "क्या होगा अगर मेरी संपत्ति पर कोई घायल हो जाए?",
+      "क्या होगा अगर मैं गलती से किसी की संपत्ति को नुकसान पहुंचाऊं?",
+      "क्या होगा अगर मुझे लापरवाही के लिए मुकदमा चलाया जाए?",
+    ],
+  },
+};
+
+/* ── Scenario categories with presets ── */
+const CATEGORIES = (t) => [
+  {
+    id: "health",
+    label: t.health,
+    icon: "🏥",
+    color: "#10B981",
+    bg: "#ECFDF5",
+    scenarios: t.healthScenarios,
+  },
+  {
+    id: "property",
+    label: t.property,
+    icon: "🏠",
+    color: "#3B82F6",
+    bg: "#EFF6FF",
+    scenarios: t.propertyScenarios,
+  },
+  {
+    id: "travel",
+    label: t.travel,
+    icon: "✈️",
+    color: "#8B5CF6",
+    bg: "#F5F3FF",
+    scenarios: t.travelScenarios,
+  },
+  {
+    id: "vehicle",
+    label: t.vehicle,
+    icon: "🚗",
+    color: "#F59E0B",
+    bg: "#FFFBEB",
+    scenarios: t.vehicleScenarios,
+  },
+  {
+    id: "liability",
+    label: t.liability,
+    icon: "⚖️",
+    color: RED,
+    bg: "#FFF0F3",
+    scenarios: t.liabilityScenarios,
   },
 ];
 
@@ -222,8 +274,11 @@ export default function ScenarioSimulator({ policyId }) {
   const [question, setQuestion] = useState("");
   const [loading, setLoading] = useState(false);
   const [history, setHistory] = useState([]); // [{question, result}]
+  const { lang } = useLanguage();
 
-  const activeCat = CATEGORIES.find((c) => c.id === activeCategory);
+  const t = TRANSLATIONS[lang];
+  const categories = CATEGORIES(t);
+  const activeCat = categories.find((c) => c.id === activeCategory);
 
   const handleAsk = async (q) => {
     const finalQ = (q || question).trim();
@@ -231,7 +286,7 @@ export default function ScenarioSimulator({ policyId }) {
     setLoading(true);
     setQuestion("");
     try {
-      const data = await simulateScenario(policyId, finalQ);
+      const data = await simulateScenario(policyId, finalQ, lang);
       setHistory((prev) => [{ question: finalQ, result: data }, ...prev]);
     } catch {
       toast.error("Something went wrong. Please try again.");
@@ -267,7 +322,7 @@ export default function ScenarioSimulator({ policyId }) {
 
       {/* Category tabs */}
       <div className="flex gap-2 flex-wrap">
-        {CATEGORIES.map((cat) => (
+        {categories.map((cat) => (
           <button
             key={cat.id}
             onClick={() => setActiveCategory(cat.id)}

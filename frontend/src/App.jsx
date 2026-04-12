@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { AnimatePresence, motion } from "framer-motion";
 
+import { LanguageProvider } from "./context/LanguageContext";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import LandingPage from "./pages/LandingPage";
@@ -78,38 +79,40 @@ function AnimatedRoutes() {
 /* ── App ────────────────────────────────────────────────────── */
 export default function App() {
   return (
-    <BrowserRouter>
-      <ScrollToTop />
-      {/* Global toast notifications */}
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          duration: 4000,
-          style: {
-            background: "#1A1A2E",
-            color: "#fff",
-            fontSize: "14px",
-            fontWeight: 500,
-            borderRadius: "12px",
-            border: "1px solid rgba(233,69,96,0.25)",
-            boxShadow: "0 8px 32px rgba(0,0,0,0.3)",
-          },
-          success: {
-            iconTheme: { primary: "#4ADE80", secondary: "#1A1A2E" },
-          },
-          error: {
-            iconTheme: { primary: "#E94560", secondary: "#1A1A2E" },
-          },
-        }}
-      />
+    <LanguageProvider>
+      <BrowserRouter>
+        <ScrollToTop />
+        {/* Global toast notifications */}
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            duration: 4000,
+            style: {
+              background: "#1A1A2E",
+              color: "#fff",
+              fontSize: "14px",
+              fontWeight: 500,
+              borderRadius: "12px",
+              border: "1px solid rgba(233,69,96,0.25)",
+              boxShadow: "0 8px 32px rgba(0,0,0,0.3)",
+            },
+            success: {
+              iconTheme: { primary: "#4ADE80", secondary: "#1A1A2E" },
+            },
+            error: {
+              iconTheme: { primary: "#E94560", secondary: "#1A1A2E" },
+            },
+          }}
+        />
 
-      <div className="flex flex-col min-h-screen">
-        <Navbar />
-        <div className="flex-1">
-          <AnimatedRoutes />
+        <div className="flex flex-col min-h-screen">
+          <Navbar />
+          <div className="flex-1">
+            <AnimatedRoutes />
+          </div>
+          <Footer />
         </div>
-        <Footer />
-      </div>
-    </BrowserRouter>
+      </BrowserRouter>
+    </LanguageProvider>
   );
 }

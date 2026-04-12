@@ -2,6 +2,26 @@ import { useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
+import { useLanguage } from "../context/LanguageContext";
+
+/* ─── Translations ──────────────────────────────────────────── */
+const TRANSLATIONS = {
+  en: {
+    pdfUpload: "PDF Upload",
+    textInput: "Text Input",
+    onlyPdfAccepted: "Only PDF files are accepted. Please try again.",
+    somethingWrong: "Something went wrong. Please try again.",
+    analyzePolicy: "Analyze Policy",
+  },
+  hi: {
+    pdfUpload: "PDF अपलोड",
+    textInput: "टेक्स्ट इनपुट",
+    onlyPdfAccepted:
+      "केवल PDF फाइलें स्वीकार की जाती हैं। कृपया फिर से प्रयास करें।",
+    somethingWrong: "कुछ गलत हो गया। कृपया फिर से प्रयास करें।",
+    analyzePolicy: "पॉलिसी विश्लेषण करें",
+  },
+};
 
 /* ─── Brand tokens ──────────────────────────────────────────── */
 const RED = "#E94560";
@@ -139,25 +159,29 @@ function formatBytes(bytes) {
   return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
 }
 
-const TABS = [
-  { id: "pdf", label: "PDF Upload", Icon: UploadCloudIcon },
-  { id: "text", label: "Text Input", Icon: FileTextIcon },
+const TABS = (t) => [
+  { id: "pdf", label: t.pdfUpload, Icon: UploadCloudIcon },
+  { id: "text", label: t.textInput, Icon: FileTextIcon },
 ];
 
 /* ─── Main Component ────────────────────────────────────────── */
 export default function UploadPage() {
   const navigate = useNavigate();
+  const { lang } = useLanguage();
   const [activeTab, setActiveTab] = useState("pdf");
   const [file, setFile] = useState(null);
   const [policyText, setPolicyText] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const t = TRANSLATIONS[lang];
+  const tabs = TABS(t);
+
   /* ── Dropzone ── */
   const onDrop = useCallback((accepted, rejected) => {
     setError("");
     if (rejected.length > 0) {
-      setError("Only PDF files are accepted. Please try again.");
+      setError(t.onlyPdfAccepted);
       return;
     }
     if (accepted.length > 0) setFile(accepted[0]);
@@ -194,7 +218,7 @@ export default function UploadPage() {
         },
       });
     } catch (err) {
-      setError(err?.message || "Something went wrong. Please try again.");
+      setError(err?.message || t.somethingWrong);
       setLoading(false);
     }
   }
@@ -282,7 +306,7 @@ export default function UploadPage() {
             }}>
             {/* ── Tabs ── */}
             <div className="flex border-b border-gray-100">
-              {TABS.map(({ id, label, Icon }) => (
+              {tabs.map(({ id, label, Icon }) => (
                 <button
                   key={id}
                   onClick={() => {
@@ -495,7 +519,7 @@ export default function UploadPage() {
                         y2="16.65"
                       />
                     </svg>
-                    Analyze Policy
+                    {t.analyzePolicy}
                   </>
                 )}
               </button>

@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { motion, AnimatePresence } from "framer-motion";
 import { analyzePolicy } from "../services/api";
+import { useLanguage } from "../context/LanguageContext";
 import toast from "react-hot-toast";
 
 const RED = "#E94560";
@@ -399,6 +400,7 @@ function ItemList({ items = [], color, emptyText }) {
 
 /* ── Main export ── */
 export default function PolicyComparison() {
+  const { lang } = useLanguage();
   const [policy1, setPolicy1] = useState(null);
   const [policy2, setPolicy2] = useState(null);
   const [loading1, setLoading1] = useState(false);
@@ -407,7 +409,7 @@ export default function PolicyComparison() {
   const analyze = async (formData, setData, setLoading, label) => {
     setLoading(true);
     try {
-      const data = await analyzePolicy(formData);
+      const data = await analyzePolicy(formData, lang);
       setData(data);
     } catch {
       toast.error(`Failed to analyze Policy ${label}. Please try again.`);

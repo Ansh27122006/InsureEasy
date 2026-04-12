@@ -1,22 +1,40 @@
 import { useState, useEffect, useRef } from "react";
 import { chatWithPolicy } from "../services/api";
 import toast from "react-hot-toast";
+import { useLanguage } from "../context/LanguageContext";
 
-const SUGGESTIONS = [
-  "What is my deductible?",
-  "Am I covered for pre-existing conditions?",
-  "What is the claim process?",
-  "Are family members covered?",
-];
+const SUGGESTIONS = {
+  en: [
+    "What is my deductible?",
+    "Am I covered for pre-existing conditions?",
+    "What is the claim process?",
+    "Are family members covered?",
+  ],
+  hi: [
+    "मेरा डिडक्टिबल क्या है?",
+    "क्या पूर्व-मौजूदा स्थितियों के लिए कवर है?",
+    "क्लेम प्रक्रिया क्या है?",
+    "क्या परिवार के सदस्य कवर हैं?",
+  ],
+};
 
 export default function PolicyChat({ policyId }) {
   const [messages, setMessages] = useState([
-    { role: "assistant", content: "Hi! Ask me anything about your policy." },
+    {
+      role: "assistant",
+      content:
+        lang === "hi"
+          ? "नमस्ते! अपनी पॉलिसी के बारे में कुछ भी पूछें।"
+          : "Hi! Ask me anything about your policy.",
+    },
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(true);
   const bottomRef = useRef(null);
+  const { lang } = useLanguage();
+
+  const suggestions = SUGGESTIONS[lang];
 
   const sendMessage = async (text) => {
     const userMsg = text || input.trim();
@@ -27,7 +45,7 @@ export default function PolicyChat({ policyId }) {
     setShowSuggestions(false);
     setLoading(true);
     try {
-      const data = await chatWithPolicy(policyId, updated);
+      const data = await chatWithPolicy(policyId, updated, lang);
       setMessages([...updated, { role: "assistant", content: data.reply }]);
     } catch {
       toast.error("Failed to get a response.");
@@ -41,7 +59,7 @@ export default function PolicyChat({ policyId }) {
       <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50">
         {showSuggestions && (
           <div className="flex flex-wrap gap-2 mb-2">
-            {SUGGESTIONS.map((s) => (
+            {suggestions.map((s) => (
               <button
                 key={s}
                 onClick={() => sendMessage(s)}

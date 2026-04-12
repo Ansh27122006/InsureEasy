@@ -5,6 +5,35 @@ import ExclusionHighlighter from "../components/ExclusionHighlighter";
 import KeyTermsGlossary from "../components/KeyTermsGlossary";
 import ScenarioSimulator from "../components/ScenarioSimulator";
 import PolicyChat from "../components/PolicyChat";
+import { useLanguage } from "../context/LanguageContext";
+
+/* ─── Translations ──────────────────────────────────────────── */
+const TRANSLATIONS = {
+  en: {
+    back: "Back",
+    policyRiskScore: "Policy Risk Score",
+    coverage: "Coverage",
+    exclusions: "Exclusions",
+    keyTerms: "Key Terms",
+    simulator: "Simulator",
+    askPolicy: "Ask Policy",
+    lowRisk: "Low Risk",
+    mediumRisk: "Medium Risk",
+    highRisk: "High Risk",
+  },
+  hi: {
+    back: "वापस",
+    policyRiskScore: "पॉलिसी जोखिम स्कोर",
+    coverage: "कवरेज",
+    exclusions: "बहिष्करण",
+    keyTerms: "महत्वपूर्ण शब्द",
+    simulator: "सिमुलेटर",
+    askPolicy: "पॉलिसी पूछें",
+    lowRisk: "कम जोखिम",
+    mediumRisk: "मध्यम जोखिम",
+    highRisk: "उच्च जोखिम",
+  },
+};
 
 /* ─── Brand tokens ──────────────────────────────────────────── */
 const NAVY = "#1A1A2E";
@@ -75,33 +104,33 @@ const SearchIcon = () => (
 );
 
 /* ─── Risk score helpers ────────────────────────────────────── */
-function getRiskColor(score) {
+function getRiskColor(score, t) {
   if (score < 40)
     return {
       stroke: "#16A34A",
       text: "#15803D",
-      label: "Low Risk",
+      label: t.lowRisk,
       bg: "#DCFCE7",
     };
   if (score < 70)
     return {
       stroke: "#D97706",
       text: "#B45309",
-      label: "Medium Risk",
+      label: t.mediumRisk,
       bg: "#FEF3C7",
     };
   return {
     stroke: "#DC2626",
     text: "#B91C1C",
-    label: "High Risk",
+    label: t.highRisk,
     bg: "#FEE2E2",
   };
 }
 
 /* ─── CSS-only circular gauge ───────────────────────────────── */
-function RiskGauge({ score = 0 }) {
+function RiskGauge({ score = 0, t }) {
   const [displayed, setDisplayed] = useState(0);
-  const cfg = getRiskColor(displayed);
+  const cfg = getRiskColor(displayed, t);
 
   useEffect(() => {
     let frame;
@@ -161,7 +190,7 @@ function RiskGauge({ score = 0 }) {
       </div>
       <div className="flex flex-col items-center gap-1">
         <span className="text-xs font-bold tracking-widest uppercase text-gray-400">
-          Policy Risk Score
+          {t.policyRiskScore}
         </span>
         <span
           className="px-3 py-1 rounded-full text-xs font-extrabold"
@@ -200,12 +229,12 @@ function StatCard({ value, label, color, icon }) {
 }
 
 /* ─── Tab definitions ───────────────────────────────────────── */
-const TABS = [
-  { id: "coverage", label: "Coverage", emoji: "🛡️" },
-  { id: "exclusions", label: "Exclusions", emoji: "🚫" },
-  { id: "terms", label: "Key Terms", emoji: "📖" },
-  { id: "simulate", label: "Simulator", emoji: "⚡" },
-  { id: "chat", label: "Ask Policy", emoji: "💬" },
+const getTabs = (t) => [
+  { id: "coverage", label: t.coverage, emoji: "🛡️" },
+  { id: "exclusions", label: t.exclusions, emoji: "🚫" },
+  { id: "terms", label: t.keyTerms, emoji: "📖" },
+  { id: "simulate", label: t.simulator, emoji: "⚡" },
+  { id: "chat", label: t.askPolicy, emoji: "💬" },
 ];
 
 /* ─── Demo / fallback data ──────────────────────────────────── */
@@ -321,9 +350,14 @@ const DEMO_DATA = {
 export default function ResultsPage() {
   const { state } = useLocation();
   const navigate = useNavigate();
+  const { lang } = useLanguage();
   const [activeTab, setActiveTab] = useState("coverage");
 
-  const data = state?.data ?? DEMO_DATA;
+  const t = TRANSLATIONS[lang];
+  const TABS = getTabs(t);
+
+  const rawData = state?.data ?? DEMO_DATA;
+  const data = rawData.en && rawData.hi ? rawData[lang] : rawData; // Fallback for demo
   const {
     summary = "",
     riskScore = 0,
@@ -383,7 +417,7 @@ export default function ResultsPage() {
                 <button
                   onClick={() => navigate("/upload")}
                   className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-white transition-colors duration-150 shrink-0">
-                  <ArrowLeftIcon /> Back
+                  <ArrowLeftIcon /> {t.back}
                 </button>
                 <span className="text-gray-600">|</span>
                 <div className="flex items-center gap-2 min-w-0">
@@ -450,7 +484,10 @@ export default function ResultsPage() {
                 </div>
               </div>
               <div className="lg:self-center">
-                <RiskGauge score={riskScore} />
+                <RiskGauge
+                  score={riskScore}
+                  t={t}
+                />
               </div>
             </div>
 

@@ -19,8 +19,14 @@ const simulateScenario = async (req, res) => {
   const coveredList = policy.covered.map((c) => c.title).join(", ");
   const notCoveredList = policy.notCovered.map((c) => c.title).join(", ");
 
-  const systemPrompt = `You are an insurance expert. 
-Answer clearly and simply. Always respond with JSON only.`;
+  const language = req.body.language || "en";
+  const systemPrompt = `You are an insurance expert.
+Answer clearly and simply. Always respond with JSON only.
+${
+  language === "hi"
+    ? "All text values in the JSON (answer, recommendation, relevantClauses) must be in Hindi (Devanagari script). JSON keys stay in English."
+    : "All text values must be in English."
+}`;
 
   const userPrompt = `Given this insurance policy:
 Covered: ${coveredList}
