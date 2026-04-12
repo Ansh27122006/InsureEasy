@@ -445,6 +445,9 @@ export default function LandingPage() {
                     background: "rgba(255,255,255,0.1)",
                   }}
                   whileTap={{ scale: 0.97 }}
+                  onClick={() =>
+                    window.open("https://youtu.be/pnA3kKXjdhM", "_blank")
+                  }
                   className="flex items-center gap-2.5 px-7 py-3.5 rounded-xl font-bold text-white text-sm border border-white/25 backdrop-blur-sm transition-colors duration-200">
                   <PlayIcon />
                   Watch Demo
