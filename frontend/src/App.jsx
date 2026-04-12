@@ -10,6 +10,7 @@ import UploadPage from "./pages/UploadPage";
 import ResultPage from "./pages/ResultPage";
 import HowItWorks from "./pages/HowItWorks";
 import About from "./pages/About";
+import ComparePage from "./pages/ComparePage";
 
 /* ── Scroll to top on route change ──────────────────────────── */
 function ScrollToTop() {
@@ -63,6 +64,10 @@ function AnimatedRoutes() {
           <Route
             path="/about"
             element={<About />}
+          />
+          <Route
+            path="/compare"
+            element={<ComparePage />}
           />
         </Routes>
       </motion.div>
