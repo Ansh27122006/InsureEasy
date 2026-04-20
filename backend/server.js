@@ -12,7 +12,25 @@ const errorHandler = require("./middleware/errorHandler");
 
 const app = express();
 
-app.use(cors({ origin: "http://localhost:5173" }));
+// REPLACE WITH:
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://insure-simple.vercel.app",
+];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
