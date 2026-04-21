@@ -5,6 +5,7 @@ import ExclusionHighlighter from "../components/ExclusionHighlighter";
 import KeyTermsGlossary from "../components/KeyTermsGlossary";
 import ScenarioSimulator from "../components/ScenarioSimulator";
 import PolicyChat from "../components/PolicyChat";
+import OutOfPocketCalculator from "../components/OutOfPocketCalculator";
 import { useLanguage } from "../context/LanguageContext";
 
 /* ─── Translations ──────────────────────────────────────────── */
@@ -17,6 +18,7 @@ const TRANSLATIONS = {
     keyTerms: "Key Terms",
     simulator: "Simulator",
     askPolicy: "Ask Policy",
+    outOfPocket: "Out-of-Pocket",
     lowRisk: "Low Risk",
     mediumRisk: "Medium Risk",
     highRisk: "High Risk",
@@ -29,6 +31,7 @@ const TRANSLATIONS = {
     keyTerms: "महत्वपूर्ण शब्द",
     simulator: "सिमुलेटर",
     askPolicy: "पॉलिसी पूछें",
+    outOfPocket: "जेब से खर्च",
     lowRisk: "कम जोखिम",
     mediumRisk: "मध्यम जोखिम",
     highRisk: "उच्च जोखिम",
@@ -233,6 +236,7 @@ const getTabs = (t) => [
   { id: "coverage", label: t.coverage, emoji: "🛡️" },
   { id: "exclusions", label: t.exclusions, emoji: "🚫" },
   { id: "terms", label: t.keyTerms, emoji: "📖" },
+  { id: "oop", label: t.outOfPocket, emoji: "💰" },
   { id: "simulate", label: t.simulator, emoji: "⚡" },
   { id: "chat", label: t.askPolicy, emoji: "💬" },
 ];
@@ -555,6 +559,21 @@ export default function ResultsPage() {
                   </p>
                 </div>
                 <KeyTermsGlossary keyTerms={keyTerms} />
+              </div>
+            )}
+
+            {/* Out-of-Pocket Calculator tab — NEW ✨ */}
+            {activeTab === "oop" && (
+              <div className="flex flex-col gap-4">
+                <div className="mb-2">
+                  <h2 className="results-heading text-2xl font-black text-gray-900">
+                    Out-of-Pocket Cost Transparency
+                  </h2>
+                  <p className="text-sm text-gray-400 mt-1">
+                    Calculate exactly how much you'll pay for medical scenarios.
+                  </p>
+                </div>
+                <OutOfPocketCalculator policyId={policyId} />
               </div>
             )}
 

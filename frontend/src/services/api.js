@@ -116,5 +116,40 @@ export async function chatWithPolicy(policyId, messages, lang) {
   return response.data;
 }
 
+/* ─── 4. calculateOOPCost ──────────────────────────────────── */
+/**
+ * Calculate out-of-pocket costs for a medical scenario.
+ *
+ * @param {string} policyId — ID of the policy to analyze
+ * @param {Object} options — Calculation options
+ * @param {number} options.medicalCost — Total medical cost
+ * @param {string} options.serviceType — Type of service (e.g., "hospital", "surgery")
+ * @param {string} options.scenarioDescription — Description of the medical scenario
+ * @param {string} options.language — Language code
+ * @returns {{ calculation: {...}, explanation: {...}, costStructure: {...} }}
+ */
+export async function calculateOOPCost(policyId, options = {}) {
+  const {
+    medicalCost,
+    serviceType = "doctor",
+    scenarioDescription = "",
+    language = "en",
+  } = options;
+
+  const response = await client.post("/policy/calculate-oop", {
+    policyId,
+    medicalCost,
+    serviceType,
+    scenarioDescription,
+    language,
+  });
+  return response.data;
+}
+
 /* ─── Default export (convenience for mocking in tests) ─────── */
-export default { analyzePolicy, simulateScenario, chatWithPolicy };
+export default {
+  analyzePolicy,
+  simulateScenario,
+  chatWithPolicy,
+  calculateOOPCost,
+};
